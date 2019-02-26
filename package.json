@@ -25,6 +25,8 @@
     "@adonisjs/ignitor": "^2.0.8",
     "@adonisjs/lucid": "^6.1.3",
     "@adonisjs/mail": "^3.0.9",
+    "adonis-mail-provider": "^2.0.2",
+    "moment": "^2.24.0",
     "pg": "^7.8.0"
   },
   "devDependencies": {

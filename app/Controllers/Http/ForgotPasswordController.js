@@ -1,5 +1,6 @@
 'use strict'
 
+const moment = require('moment')
 const crypto = require('crypto')
 const User = use('App/models/User')
 const Mail = use('Mail')
@@ -31,6 +32,34 @@ class ForgotPasswordController {
       return response.status(err.status).send({
         error: {
           message: 'Algo esta errado. O e-mail esta correto??'
+        }
+      })
+    }
+  }
+
+  async update ({ request, response }) {
+    try {
+      const { token, password } = request.all()
+      const user = await User.findByOrFail('token', token)
+      const tokenExpired = moment()
+        .subtract('2', 'days')
+        .isAfter(user.token_created_at)
+
+      if (tokenExpired) {
+        return response.status(401).send({
+          error: {
+            message: 'O token de recuperação esta expirado'
+          }
+        })
+      }
+      // user.token = null
+      // user.token_created_at = null
+      user.password = password
+      await user.save()
+    } catch (err) {
+      return response.status(err.status).send({
+        error: {
+          message: 'Algo esta errado ao resetar sua senha'
         }
       })
     }
